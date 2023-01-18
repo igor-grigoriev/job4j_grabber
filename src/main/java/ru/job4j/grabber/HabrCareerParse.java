@@ -33,7 +33,7 @@ public class HabrCareerParse {
     private String retrieveDescription(String link) throws IOException {
         Connection connection = Jsoup.connect(link);
         Document document = connection.get();
-        Element content = document.select(".faded-content__container").first();
-        return content.text();
+        Element description = document.select(".vacancy-description__text").first();
+        return description.text();
     }
 }
