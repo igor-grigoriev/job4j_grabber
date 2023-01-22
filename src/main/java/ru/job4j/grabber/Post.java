@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public record Post(int id, String title, String link, String description, LocalDateTime created) {
+
+    public Post(String title, String link, String description, LocalDateTime created) {
+        this(0, title, link, description, created);
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) {
