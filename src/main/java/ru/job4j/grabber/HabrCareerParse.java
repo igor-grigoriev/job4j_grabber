@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HabrCareerParse implements Parse {
+    private static final int PAGE_COUNT = 5;
     private final DateTimeParser dateTimeParser;
 
     public HabrCareerParse(DateTimeParser dateTimeParser) {
@@ -22,7 +23,7 @@ public class HabrCareerParse implements Parse {
     public List<Post> list(String link) {
         List<Post> result = new ArrayList<>();
         try {
-            for (int i = 1; i <= 2; i++) {
+            for (int i = 1; i <= PAGE_COUNT; i++) {
                 Connection connection = Jsoup.connect(link + i);
                 Document document = connection.get();
                 Elements rows = document.select(".vacancy-card__inner");
