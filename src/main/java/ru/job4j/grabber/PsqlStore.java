@@ -27,12 +27,15 @@ public class PsqlStore implements Store {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Store store = new PsqlStore(config);
-        store.save(new Post("name1", "link1", "text1", LocalDateTime.now()));
-        System.out.println(store.findById(1));
-        store.save(new Post("name2", "link2", "text2", LocalDateTime.now()));
-        store.save(new Post("name3", "link2", "text3", LocalDateTime.now()));
-        store.getAll().forEach(System.out::println);
+        try (Store store = new PsqlStore(config)) {
+            store.save(new Post("name1", "link1", "text1", LocalDateTime.now()));
+            System.out.println(store.findById(1));
+            store.save(new Post("name2", "link2", "text2", LocalDateTime.now()));
+            store.save(new Post("name3", "link2", "text3", LocalDateTime.now()));
+            store.getAll().forEach(System.out::println);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -46,6 +49,11 @@ public class PsqlStore implements Store {
             statement.setString(3, post.link());
             statement.setTimestamp(4, Timestamp.valueOf(post.created()));
             statement.execute();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    post = new Post(generatedKeys.getInt("id"), post.title(), post.link(), post.description(), post.created());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
